@@ -17,6 +17,13 @@ spring:
     hibernate:
       ddl-auto: update
     show-sql: true
+  # Configure redis
+  cache:
+    type: redis
+  data:
+    redis:
+      host: localhost
+      port: 6379
 
 # Config Eureka Client
 eureka:

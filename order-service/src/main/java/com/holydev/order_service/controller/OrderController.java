@@ -6,7 +6,9 @@ import com.holydev.order_service.fiegnDto.UserDto;
 import com.holydev.order_service.model.Order;
 import com.holydev.order_service.repository.OrderRepository;
 import com.holydev.order_service.response.OrderResponse;
+import com.holydev.order_service.services.OrderService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,17 +19,19 @@ import java.util.List;
 public class OrderController {
 
     private final OrderRepository orderRepository;
+    private final OrderService orderService;
 
     private final UserClient userClient;
 
     @PostMapping
+    @CacheEvict(value = "allOrders", allEntries = true)
     public Order createOrder(@RequestBody Order order) {
-        return orderRepository.save(order);
+        return orderService.createOrder(order);
     }
 
     @GetMapping
     public List<Order> getAllOrders() {
-        return orderRepository.findAll();
+        return orderService.getAllORders();
     }
 
     @GetMapping("/{id}")
