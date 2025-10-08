@@ -22,4 +22,6 @@ public class Order implements Serializable {
     private Long userId;
     private String product;
     private Double price;
+
+    private Double total;
 }
