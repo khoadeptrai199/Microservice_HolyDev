@@ -1,6 +1,6 @@
 # src/main/resources/application.yml
 server:
-  port: 8080
+  port: 8084
 
 spring:
   application:
@@ -13,6 +13,11 @@ spring:
           uri: lb://user-service # dùng service name đăng ký với Eureka
           predicates:
             - Path=/api/users/**
+# Do not need auth for auth endpoints anymore, handled in user-service itself by keycloak
+#        - id: user-service-auth
+#          uri: lb://user-service
+#          predicates:
+#            - Path=/api/auth/**
 
         - id: order-service
           uri: lb://order-service

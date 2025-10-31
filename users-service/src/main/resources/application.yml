@@ -25,6 +25,13 @@ spring:
       host: localhost
       port: 6379
 
+#  Configure JWT  validation  with Keycloak
+  security:
+    oauth2:
+      resource-server:
+        jwt:
+          issuer-uri: http://localhost:8080/realms/demo-realm
+
 #Configure Eureka Client
 eureka:
   client:

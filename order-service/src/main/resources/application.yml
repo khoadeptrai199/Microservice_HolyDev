@@ -32,7 +32,12 @@ spring:
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
       properties:
         spring.json.add.type.headers: false
-
+  #  Configure JWT  validation  with Keycloak
+  security:
+    oauth2:
+      resource-server:
+        jwt:
+          issuer-uri: http://localhost:8080/realms/demo-realm
 # Config Eureka Client
 eureka:
   client:
