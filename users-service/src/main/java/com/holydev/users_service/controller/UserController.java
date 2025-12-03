@@ -9,6 +9,8 @@ import com.holydev.users_service.response.UserResponse;
 import com.holydev.users_service.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -45,4 +47,14 @@ public class UserController {
         List<OrderDto> orders = orderFeign.getOrdersByUserId(userId);
         return new UserResponse(user.getId(), user.getName(), user.getEmail(), orders);
     }
+
+    @GetMapping("/keycloak/{sub}")
+    public UserDto getUserByKeycloakId(@PathVariable String sub, @AuthenticationPrincipal Jwt jwt) {
+        //tự tạo user từ token
+        User user = userRepository.findByKeycloakId(sub)
+                .orElseGet(() -> userService.ensureUserExistsFromToken(jwt));
+
+        return new UserDto(user.getId(), user.getName(), user.getEmail());
+    }
+
 }

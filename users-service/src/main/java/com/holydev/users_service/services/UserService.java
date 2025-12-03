@@ -4,6 +4,7 @@ import com.holydev.users_service.model.User;
 import com.holydev.users_service.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -25,5 +26,18 @@ public class UserService {
 
     public User getUserById(Long id){
         return userRepository.findById(id).orElseThrow(()-> new RuntimeException("User not found"));
+    }
+
+    public User ensureUserExistsFromToken(Jwt jwt) {
+        String keycloakId = jwt.getSubject(); // sub
+        return userRepository.findByKeycloakId(keycloakId)
+                .orElseGet(() -> {
+                    // Tạo mới user nếu chưa có
+                    User user = new User();
+                    user.setKeycloakId(keycloakId);
+                    user.setEmail(jwt.getClaim("email"));
+                    user.setName(jwt.getClaim("preferred_username"));
+                    return userRepository.save(user);
+                });
     }
 }
